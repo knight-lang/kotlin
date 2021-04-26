@@ -1,6 +1,5 @@
 package knight
 
-import knight.Value
 import kotlin.math.pow
 import kotlin.math.roundToLong
 
@@ -55,7 +54,7 @@ class Number(val num: Long) : Idempotent<Long>(num) {
 	override operator fun div(other: Value) =
 		other
 			.toLong()
-			.also { it == 0 && throw RunException("cannot divide by zero") }
+			.also { it == 0L && throw RunException("cannot divide by zero") }
 			.let { Number(data / it) }
 
 	/**
@@ -66,8 +65,8 @@ class Number(val num: Long) : Idempotent<Long>(num) {
 	override operator fun rem(other: Value) =
 		other
 			.toLong()
-			.also { it == 0 && throw RunException("cannot modulo by zero") }
-			.let { Number(data / it) }
+			.also { it == 0L && throw RunException("cannot modulo by zero") }
+			.let { Number(data % it) }
 
 	/**
 	 * Converts [other] to a `Long` and exponentiates [data] by it.
@@ -77,7 +76,7 @@ class Number(val num: Long) : Idempotent<Long>(num) {
 	override infix fun pow(other: Value) =
 		other
 			.toLong()
-			.also { it < 0 && data == 0 && throw RunException("cannot raise zero to a negative power") }
+			.also { it < 0L && data == 0L && throw RunException("cannot raise zero to a negative power") }
 			.let { Number(data.toDouble().pow(it.toDouble()).roundToLong())} 
 
 }

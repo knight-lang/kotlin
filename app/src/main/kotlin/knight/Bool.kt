@@ -24,5 +24,5 @@ class Bool(bool: Boolean) : Idempotent<Boolean>(bool) {
 	/**
 	 * Converts [other] to a boolean and compares it against `data`.
 	 */
-	override operator fun compareTo(other: Value) = data.compareTo(other.toBoolean())
+	override operator fun compareTo(other: Value) = toLong().compareTo(if (other.toBoolean()) 1L else 0L)
 }

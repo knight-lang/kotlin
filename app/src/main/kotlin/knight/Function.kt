@@ -1,9 +1,5 @@
 package knight
 
-import knight.Value
-import knight.NonIdempotent
-import knight.Number
-
 class Ast(val func: Function, val args: Array<Value>): NonIdempotent() {
 	override fun run() = (func.func)(args)
 	override fun dump() = print("Function(${func.name}, $args)")

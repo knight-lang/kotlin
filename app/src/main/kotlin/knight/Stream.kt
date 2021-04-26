@@ -1,6 +1,6 @@
 package knight
 
-class Stream: Iterator<Char> {
+internal class Stream: Iterator<Char> {
 	private val iter: Iterator<Char>
 	private var prev: Char = '\u0000'
 	private var rewound: Boolean = false
@@ -12,8 +12,11 @@ class Stream: Iterator<Char> {
 
 	override operator fun hasNext() = rewound || iter.hasNext()
 	override operator fun next(): Char {
-		if (rewound) rewound = false
-		else prev = iter.next()
+		if (rewound) {
+			rewound = false
+		} else {
+			prev = iter.next()
+		}
 
 		return prev
 	}
@@ -26,18 +29,17 @@ class Stream: Iterator<Char> {
 
 	inline fun takeWhile(cond: (Char) -> Boolean): String {
 		var collection = ""
-
 		var c: Char
 
 		while (hasNext()) {
 			c = next()
 
-			if (cond(c)) {
-				collection += c
-			} else {
+			if (!cond(c)) {
 				rewind()
 				break
 			}
+
+			collection += c
 		}
 
 		return collection
@@ -59,8 +61,7 @@ class Stream: Iterator<Char> {
 			'N', 'T', 'F' -> {
 				dropKeyword()
 
-				if (c == 'N') Null()
-				else Bool(c == 'T')
+				if (c == 'N') Null() else Bool(c == 'T')
 			}
 
 			'\'', '\"' -> {
@@ -78,8 +79,11 @@ class Stream: Iterator<Char> {
 			else -> {
 				val func = Function.fetch(c) ?: throw ParseException("Unknown token start '$c'")
 
-				if (c.isUpperCase()) dropKeyword()
-				else next()
+				if (c.isUpperCase()) {
+					dropKeyword()
+				} else {
+					next()
+				}
 
 				val args = Array(func.arity) {
 					parse() ?: throw ParseException("Missing argument ${it + 1} for func '$func'")
