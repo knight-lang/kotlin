@@ -12,5 +12,5 @@ class Variable private constructor(final val name: String): NonIdempotent() {
 	var value: Value? = null
 
 	override fun dump() = print("Identifier($name)")
-	override fun run() = value ?: throw RuntimeException("undefined variable: $name")
+	override fun run() = value ?: throw RunException("undefined variable: $name")
 }

@@ -12,11 +12,8 @@ class Stream: Iterator<Char> {
 
 	override operator fun hasNext() = rewound || iter.hasNext()
 	override operator fun next(): Char {
-		if (rewound) {
-			rewound = false
-		} else {
-			prev = iter.next()
-		}
+		if (rewound) rewound = false
+		else prev = iter.next()
 
 		return prev
 	}
@@ -31,6 +28,7 @@ class Stream: Iterator<Char> {
 		var collection = ""
 
 		var c: Char
+
 		while (hasNext()) {
 			c = next()
 
@@ -52,15 +50,9 @@ class Stream: Iterator<Char> {
 		fun Stream.dropKeyword() = takeWhile { it.isUpperCase() || it == '_' }
 
 		return when (val c = peek() ?: return null) {
-			'#' -> {
-				takeWhile { it != '\n' } // ignore the line
-				parse()
-			}
+			'#' -> takeWhile { it != '\n' }.let { parse() }
 
-			in " \t\r\n:(){}[]" -> {
-				next() // drop the whitespace
-				parse()
-			}
+			in " \t\r\n:(){}[]" -> next().let { parse() }
 
 			in '0'..'9' -> Number(takeWhile(Char::isDigit).toLong())
 
@@ -74,37 +66,29 @@ class Stream: Iterator<Char> {
 			}
 
 			'\'', '\"' -> {
-				next()
+				next() // remove quotex
 				val string = takeWhile { it != c }
 
 				if (string.lastOrNull() == c)
-					throw RuntimeException("Unterimanted quote found. stream: ${string.take(20)}")
+					throw ParseException("Unterimanted quote found. stream: ${string.take(20)}")
 
-				Text(string.dropLast(1))
+				next() // remove trailing quote
+
+				Text(string)
 			}
 
 			else -> {
-				// val func = Func.fetch(next()) ?: throw RuntimeException("Unknown token start '$c'")
+				val func = Function.fetch(c) ?: throw ParseException("Unknown token start '$c'")
 
-				// if (c.isUpperCase()) dropKeyword()
+				if (c.isUpperCase()) dropKeyword()
+				else next()
 
-				error("unknown token start '$c'")
+				val args = Array(func.arity) {
+					parse() ?: throw ParseException("Missing argument ${it + 1} for func '$func'")
+				}
+
+				Ast(func, args)
 			}
 		}
-}
-
-// 				Value[] args = new Value[func.getArity()];
-
-// 				for (int i = 0; i < args.length; ++i) {
-// 					args[i] = parse(stream);
-
-// 					if (args[i] == null) {
-// 						throw new ParseException("Couldn't parse argument " + i + " for function " + func.getName());
-// 					}
-// 				}
-
-// 				return new Func(args, func);
-// 		}
-// 	}
-
+	}
 }
