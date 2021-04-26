@@ -1,15 +1,28 @@
 package knight
 
-import knight.Value
+/**
+ * The boolean value within Knight.
+ */
+class Bool(bool: Boolean) : Idempotent<Boolean>(bool) {
+	override fun dump() = print("Boolean($data)")
 
-class Bool(val bool: Boolean) : Value {
-	override fun run() = this
-	override fun dump() = print("Boolean($bool)")
+	/**
+	 * Returns either `1L` or `0L` depending on whether `this` is true or false.
+	 */
+	override fun toLong() = if (data) 1L else 0L
 
-	override fun toLong()    = if (bool) 1L else 0L
-	override fun toString()  = "" + bool
-	override fun toBoolean() = bool
+	/**
+	 * Returns either `"true"` or `"false"` depending on whether is true or false.
+	 */
+	override fun toString() = "" + data
 
-	override operator fun compareTo(other: Value) = bool.compareTo(other.toBoolean())
-	override fun equals(other: Any?) = other is Bool && bool == other.bool
+	/**
+	 * Simply returns the associated boolean.
+	 */
+	override fun toBoolean() = data
+
+	/**
+	 * Converts [other] to a boolean and compares it against `data`.
+	 */
+	override operator fun compareTo(other: Value) = data.compareTo(other.toBoolean())
 }

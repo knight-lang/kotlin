@@ -6,19 +6,19 @@ class Text(val text: String) : Value {
 	override fun run() = this
 	override fun dump() = print("String($text)")
 
-	override fun toString()  = text
+	override fun toString() = text
 	override fun toBoolean() = !text.isEmpty()
 	override fun toLong(): Long {
 		var txt = text
 
 		while (!txt.isEmpty() && txt[0].isWhitespace())
 			txt = txt.substring(1)
-		
+
 		if (txt.isEmpty()) return 0L
 
 		val isNegative = txt[0] == '-'
 		if (isNegative || txt[0] == '+') txt = txt.substring(1)
-		
+
 		var result = 0L
 
 		while (!txt.isEmpty() && txt[0].isDigit()) {

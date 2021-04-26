@@ -6,7 +6,7 @@ class Variable private constructor(final val name: String): NonIdempotent() {
 	companion object {
 		private var VARIABLES: MutableMap<String, Variable> = HashMap()
 
-		public fun fetch(name: String) = VARIABLES.getOrPut(name) { Variable(name) }
+		fun fetch(name: String) = VARIABLES.getOrPut(name) { Variable(name) }
 	}
 
 	var value: Value? = null

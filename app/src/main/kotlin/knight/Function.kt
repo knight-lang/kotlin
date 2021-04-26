@@ -25,10 +25,10 @@ data class Function private constructor(val name: Char, val arity: Int, val func
 			register('R', 0, { Number(kotlin.math.abs(kotlin.random.Random.nextLong())) })
 			register('P', 0) { Text(readLine() ?: "") }
 
-			register('E', 1) { (code,) -> Stream(code.toString()).parse()?.run() ?: throw RunException("nothing parsed") }
+			register('E', 1) { (code,) -> run(code.toString()) }
 			register('B', 1) { (block,) -> block }
 			register('C', 1) { (block,) -> block.run().run() }
-			register('`', 1) { (cmd,) -> 
+			register('`', 1) { (cmd,) ->
 				var builder = ProcessBuilder("/bin/sh", "-c", cmd.toString())
 				val output: String
 
@@ -69,10 +69,10 @@ data class Function private constructor(val name: Char, val arity: Int, val func
 			register('<', 2) { (lhs, rhs) -> Bool(lhs < rhs) }
 			register('>', 2) { (lhs, rhs) -> Bool(lhs > rhs) }
 			register('?', 2) { (lhs, rhs) -> Bool(lhs.run().equals(rhs.run())) }
-			register('&', 2) { (lhs, rhs) -> lhs.run().let { if(it.toBoolean()) rhs.run() else it  } }
-			register('|', 2) { (lhs, rhs) -> lhs.run().let { if(it.toBoolean()) it else rhs.run()  } }
+			register('&', 2) { (lhs, rhs) -> lhs.run().let { if(it.toBoolean()) rhs.run() else it } }
+			register('|', 2) { (lhs, rhs) -> lhs.run().let { if(it.toBoolean()) it else rhs.run() } }
 			register(';', 2) { (lhs, rhs) -> lhs.run().let { rhs.run() } }
-			register('=', 2) { (var_, val_) -> val_.run().also { (var_ as Variable).value = it }  }
+			register('=', 2) { (var_, val_) -> val_.run().also { (var_ as Variable).value = it } }
 			register('W', 2) { (cond, body) ->
 				while (cond.toBoolean())
 					body.run()
@@ -88,7 +88,7 @@ data class Function private constructor(val name: Char, val arity: Int, val func
 				return@register Text(if (string.isEmpty()) "" else string.substring(start, start + length))
 			}
 
-			register('S', 4) { 
+			register('S', 4) {
 				val string = it[0].toString()
 				val start = it[1].toLong().toInt()
 				val length = it[2].toLong().toInt()

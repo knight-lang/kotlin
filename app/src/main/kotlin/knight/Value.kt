@@ -6,6 +6,12 @@ class BadType(message: String) : KnightException(message)
 
 interface Value : Comparable<Value> {
 	abstract fun run(): Value
+
+	/**
+	 * Writes the debug representation of this class to stdout.
+	 *
+	 * Note that a trailing newline will not be added.
+	 */
 	abstract fun dump()
 
 	abstract fun toLong(): Long
@@ -20,5 +26,5 @@ interface Value : Comparable<Value> {
 	operator fun times(other: Value): Value = throw BadType("cannot multiply $this")
 	operator fun div(other: Value): Value = throw BadType("cannot divide $this")
 	operator fun rem(other: Value): Value = throw BadType("cannot modulo $this")
-	   infix fun pow(other: Value): Value = throw BadType("cannot exponentiate $this")
+	infix fun pow(other: Value): Value = throw BadType("cannot exponentiate $this")
 }

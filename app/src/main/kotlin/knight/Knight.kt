@@ -5,10 +5,13 @@ import knight.Value
 import kotlin.system.exitProcess
 import java.io.File
 
-fun run(input: String): Value =
-	Stream(input)
-		.parse()
-		.also { it ?: throw ParseException("nothing to parse") } !!.run()
+/**
+ * Parses and runs [input] as Knight code, returning the result of execution.
+ *
+ * @throws ParseException Thrown when no value could be parsed from [input].
+ * @throws ParseException Thrown when [input] contains invalid Knight syntax.
+ */
+fun run(input: String): Value = Stream(input).parse()?.run() ?: throw ParseException("nothing to parse")
 
 private fun usage() : Nothing {
 	println("usage: knight (-e 'expr' | -f filename)")

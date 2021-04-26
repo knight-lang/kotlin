@@ -1,14 +1,24 @@
 package knight
 
-import knight.Value
-
-class Null : Value {
-	override fun run() = this
+/**
+ * The boolean value within Knight.
+ */
+class Null : Idempotent<Unit> {
+	constructor(): super(Unit)
 	override fun dump() = print("Null()")
 
-	override fun toLong()    = 0L
-	override fun toString()  = "null"
-	override fun toBoolean() = false
+	/**
+	 * Simply returns `0L`.
+	 */
+	override fun toLong() = 0L
 
-	override fun equals(other: Any?) = other is Null
+	/**
+	 * Simply returns `"null"`.
+	 */
+	override fun toString() = "null"
+
+	/**
+	 * Simply returns `false`.
+	 */
+	override fun toBoolean() = false
 }

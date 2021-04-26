@@ -43,8 +43,6 @@ class Stream: Iterator<Char> {
 		return collection
 	}
 
-
-
 	// fun parse(string: String): Value? = parse(Stream(string))
 	fun parse(): Value? {
 		fun Stream.dropKeyword() = takeWhile { it.isUpperCase() || it == '_' }
