@@ -1,6 +1,13 @@
 package knight
 
-class Ast(val func: Function, val args: Array<Value>): NonIdempotent() {
+/**
+ * The class that represents a function call within Knight.
+ */
+data class Ast(val func: Function, val args: Array<Value>): NonIdempotent() {
+
+	/**
+	 * Executes [func] by calling it with [args]
+	 */
 	override fun run() = (func.func)(args)
 	override fun dump() = print("Function(${func.name}, $args)")
 }
@@ -11,12 +18,21 @@ data class Function private constructor(val name: Char, val arity: Int, val func
 	companion object {
 		private var FUNCTIONS: MutableMap<Char, Function> = HashMap()
 
+		/**
+		 * Associates `name` with the given [func] (which should have an arity of [arity]).
+		 *
+		 * Any previously assigned function is discarded.
+		 */
 		fun register(name: Char, arity: Int, func: (Array<Value>) -> Value) {
 			FUNCTIONS[name] = Function(name, arity, func)
 		}
 
+		/**
+		 * Fetches the function associated with [name], returning `null` if no function has been associated.
+		 */
 		fun fetch(name: Char) = FUNCTIONS.get(name)
 
+		// initialize all the functions.
 		init {
 			register('R', 0, { Number(kotlin.math.abs(kotlin.random.Random.nextLong())) })
 			register('P', 0) { Text(readLine() ?: "") }
